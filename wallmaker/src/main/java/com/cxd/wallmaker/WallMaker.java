@@ -7,7 +7,7 @@ public class WallMaker {
         this.builder = builder;
     }
 
-    public <S>S create(Class<S> c){
+    public synchronized <S>S create(Class<S> c){
         if(c != null && c.isInterface()){
             S s = (S) new WallMethodHandler(builder.baseUrl).newProxyInstance(c);
             return s;
@@ -19,19 +19,8 @@ public class WallMaker {
     }
 
     public static class Builder{
-//        private String baseHeader ;
-        private IPreProcess iPreProcess ;
+//        private IPreProcess iPreProcess ;
         private String baseUrl ;
-
-//        public Builder baseHeader(String baseHeader){
-//            this.baseHeader = baseHeader ;
-//            return this;
-//        }
-
-        public Builder preProcess(IPreProcess i){
-            this.iPreProcess = i ;
-            return this ;
-        }
 
         public Builder baseUrl(String baseUrl){
             this.baseUrl = baseUrl ;
@@ -42,12 +31,14 @@ public class WallMaker {
             return new WallMaker(this);
         }
 
-        /**
-         * @param <T>
-         */
-        public interface IPreProcess<M,T>{
-                T preProcess(M m); //从M里剖析出T
-        }
+//        /**
+//         * 脱壳的实现回调
+//         * @param <Parent> parent 父泛型
+//         * @param <Child> child 子泛型
+//         */
+//        public interface IPreProcess<Parent,Child>{
+//            Child preProcess(Parent p); //从M里剖析出T
+//        }
     }
 
 

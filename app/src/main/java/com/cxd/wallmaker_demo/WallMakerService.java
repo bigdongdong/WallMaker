@@ -3,15 +3,18 @@ package com.cxd.wallmaker_demo;
 import com.cxd.wallmaker.WallMaker;
 
 public class WallMakerService {
+//    private static final String baseUrl = "http://47.103.217.160:8080/bodybuilding" ;
+    private static final String baseUrl = "http://47.103.217.160:1010/daily" ;
 
-    public static <T>T create(Class<T> c){
+    /**
+     * 通过传入Service.class创建一个实例
+     * @param Class<S> c : Service.class
+     * @return
+     */
+    public static <S>S create(Class<S> c){
         return new WallMaker.Builder()
-                .baseUrl("http://47.103.217.160:8080/bodybuilding")
-//                .preProcess(new WallMaker.Builder.IPreProcess() {
-//                    @Override
-//                    public Object preProcess(Object o) {
-//                        return null;
-//                    }
+                .baseUrl(baseUrl)
+//                .preTreat(new WallMaker.Builder.IPreProcess<Common<>>() {
 //                })
                 .build()
                 .create(c);

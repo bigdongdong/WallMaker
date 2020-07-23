@@ -9,7 +9,7 @@ import com.cxd.wallmaker.Wall;
 import com.cxd.wallmaker.WallMaker;
 
 public class MainActivity extends AppCompatActivity {
-
+    final IAccountService service = WallMakerService.create(IAccountService.class);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,14 +19,19 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IAccountService service = WallMakerService.create(IAccountService.class);
-                service.get()
-                        .request(new Wall.IAccept<VersionBean>() {
+//                service.get("aaa")
+//                        .request(new Wall.IAccept<VersionBean>() {
+//                            @Override
+//                            public void onSuccess(VersionBean versionBeanCommon) {
+//                            }
+//
+//                        });
+                service.login("cxd","xxx")
+                        .request(new Wall.IAccept<Object>() {
                             @Override
-                            public void onSuccess(VersionBean versionBeanCommon) {
-                                Log.i("WallMaker", "onSuccess: "+versionBeanCommon.toString());
+                            public void onSuccess(Object t) {
+                                Log.i("WallMaker", "onSuccess: "+t);
                             }
-
                         });
             }
         });

@@ -1,10 +1,10 @@
 package com.cxd.wallmaker;
 
-public enum RequestMethod {
+public enum Method {
     GET("GET"),POST("POST");
     public String value;
 
-    RequestMethod(String value) {
+    Method(String value) {
         this.value = value;
     }
 }
