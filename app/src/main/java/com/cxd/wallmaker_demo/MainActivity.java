@@ -1,4 +1,4 @@
-package com.cxd.wallmaker;
+package com.cxd.wallmaker_demo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
