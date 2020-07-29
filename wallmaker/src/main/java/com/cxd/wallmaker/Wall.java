@@ -12,6 +12,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -43,17 +50,44 @@ public final class Wall<Bean> {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 if(ifAccept != null){
-                    ifAccept.onError(e);
+                    Observable.just(e)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<IOException>() {
+                                @Override
+                                public void accept(IOException e) throws Exception {
+                                    ifAccept.onError(e);
+                                }
+                            });
                 }
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response != null && response.body() != null){
-                    String s = shell(response.body().string()); //脱壳
-                    iAccept.onSuccess((Bean)new Gson().fromJson(s,type));
-                }else if(ifAccept != null){
-                    ifAccept.onError(new IOException("response is null"));
+                    final String s = shell(response.body().string()); //脱壳
+                    Observable.just(s)
+                            .map(new Function<String, Bean>() {
+                                @Override
+                                public Bean apply(String s) throws Exception {
+                                    return new Gson().fromJson(s,type);
+                                }
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Bean>() {
+                                @Override
+                                public void accept(Bean b) throws Exception {
+                                    iAccept.onSuccess(b);
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception {
+                                    if(ifAccept != null){
+                                        ifAccept.onError(new Exception(throwable.getMessage() + "\n"+ s));
+                                    }
+                                }
+                            });
                 }
             }
         });
@@ -72,6 +106,6 @@ public final class Wall<Bean> {
         void onSuccess(Bean bean);
     }
     public interface IFAccept{
-        void onError(IOException e);
+        void onError(Exception e);
     }
 }

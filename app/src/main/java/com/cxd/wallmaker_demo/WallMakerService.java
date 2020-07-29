@@ -1,14 +1,15 @@
 package com.cxd.wallmaker_demo;
 
+import android.preference.PreferenceActivity;
+
 import com.cxd.wallmaker.WallMaker;
 
 public class WallMakerService {
 //    private static final String baseUrl = "http://47.103.217.160:8080/bodybuilding" ;
-    private static final String baseUrl = "http://47.103.217.160:1010/daily" ;
+    private static final String baseUrl = "http://192.168.71.222:8080/bodybuilding" ;
 
     /**
      * 通过传入Service.class创建一个实例
-     * @param Class<S> c : Service.class
      * @return
      */
     public static <S>S create(Class<S> c){
