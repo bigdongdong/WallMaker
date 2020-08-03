@@ -1,7 +1,5 @@
 package com.cxd.wallmaker_demo;
 
-import android.preference.PreferenceActivity;
-
 import com.cxd.wallmaker.WallMaker;
 
 public class WallMakerService {

@@ -33,7 +33,7 @@ import okhttp3.RequestBody;
  * create by chenxiaodong on 2020/7/23
  * service's method 动态代理
  */
-public class WallMethodHandler implements InvocationHandler {
+public final class WallMethodHandler implements InvocationHandler {
     private final String TAG = "WallMaker";
     private final String baseUrl ;
     private final Headers baseHeaders ;
@@ -95,7 +95,7 @@ public class WallMethodHandler implements InvocationHandler {
         if(args != null && args.length > 0){
             for (int i = 0; i < args.length; i++) {
                 Annotation a = pannos[i][0];//只取每个参数的第一个注解
-                if(a instanceof Param){
+                if(a instanceof Param && args[i] != null){
                     paramsMap.put(((Param)a).key(),args[i].toString());
                 }
             }
